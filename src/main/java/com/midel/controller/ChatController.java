@@ -3,8 +3,6 @@ package com.midel.controller;
 import com.midel.dto.Mapper;
 import com.midel.dto.chat.ChatCreateRequestDto;
 import com.midel.dto.user.UserRequestDto;
-import com.midel.dto.user.UserResponseDto;
-import com.midel.response.ErrorResponse;
 import com.midel.response.RestResponse;
 import com.midel.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;

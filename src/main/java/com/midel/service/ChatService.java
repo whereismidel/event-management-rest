@@ -5,6 +5,7 @@ import com.midel.dto.Mapper;
 import com.midel.entity.Chat;
 import com.midel.entity.User;
 import com.midel.repository.ChatRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -62,13 +63,6 @@ public class ChatService {
 
     }
 
-    public void addChatMember(UUID chatId, String username) {
-
-        User userToAdd = userService.getByUsername(username);
-        addChatMember(chatId, userToAdd);
-
-    }
-
     public void addChatMember(UUID chatId, Long userId) {
 
         User userToAdd = userService.getById(userId);
@@ -81,7 +75,7 @@ public class ChatService {
         Chat chat = getAuthUserChatById(chatId);
 
         if (chat.getMembers().contains(userToAdd)) {
-            throw new EntityNotFoundException("The user with the id=" + userToAdd.getId() + " is already in this chat");
+            throw new EntityExistsException("The user with the id=" + userToAdd.getId() + " is already in this chat");
         }
 
         chat.getMembers().add(userToAdd);

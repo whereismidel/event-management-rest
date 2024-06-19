@@ -5,7 +5,6 @@ import com.midel.dto.event.EventCreateRequestDto;
 import com.midel.dto.event.EventResponseDto;
 import com.midel.dto.event.EventUpdateRequestDto;
 import com.midel.dto.user.UserRequestDto;
-import com.midel.dto.user.UserResponseDto;
 import com.midel.entity.Chat;
 import com.midel.entity.Event;
 import com.midel.entity.User;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,7 +35,7 @@ public class EventService {
 
         return eventRepository.findAll()
                 .stream()
-                .map(EventService::getEventDtoFunction)
+                .map(this::getEventDtoFunction)
                 .collect(Collectors.toSet());
 
     }
@@ -46,7 +44,7 @@ public class EventService {
 
         return eventRepository.queryEventsByStatus(status)
                 .stream()
-                .map(EventService::getEventDtoFunction)
+                .map(this::getEventDtoFunction)
                 .collect(Collectors.toSet());
 
     }
@@ -85,7 +83,7 @@ public class EventService {
 
         return currentUser.getCreatedEvents()
                 .stream()
-                .map(EventService::getEventDtoFunction)
+                .map(this::getEventDtoFunction)
                 .collect(Collectors.toSet());
     }
 
@@ -223,7 +221,7 @@ public class EventService {
         User user = userService.getCurrentUser();
 
         return eventRepository.findAccessibleEvents(user.getId()).stream()
-                .map(EventService::getEventDtoFunction)
+                .map(this::getEventDtoFunction)
                 .collect(Collectors.toSet());
     }
 
@@ -240,7 +238,7 @@ public class EventService {
 
     }
 
-    public static EventResponseDto getEventDtoFunction(Event event) {
+    public EventResponseDto getEventDtoFunction(Event event) {
         return switch (event.getVisibility()) {
             case PUBLIC -> Mapper.INSTANCE.eventToPublicEventResponse(event);
             case FRIENDS_ONLY -> Mapper.INSTANCE.eventToFriendsEventResponse(event);

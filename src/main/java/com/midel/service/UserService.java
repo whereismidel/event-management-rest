@@ -60,7 +60,7 @@ public class UserService {
 
         if (!user.getFriends().add(friend)) {
             throw new EntityExistsException("You already have a friend with id=" + friendId);
-        };
+        }
 
         userRepository.save(user);
     }

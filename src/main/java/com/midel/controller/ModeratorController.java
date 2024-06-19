@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.midel.service.EventService.getEventDtoFunction;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("moderation")
@@ -29,6 +27,7 @@ public class ModeratorController {
     private final UserService userService;
     private final ChatService chatService;
     private final EventService eventService;
+    private final EventController eventController;
 
     @Operation(summary = "Get all users")
     @GetMapping("users")
@@ -74,7 +73,7 @@ public class ModeratorController {
     public ResponseEntity<?> getEvent(@PathVariable UUID eventId) {
         return new RestResponse(
                 HttpStatus.OK,
-                getEventDtoFunction(eventService.getEvent(eventId))
+                eventService.getEventDtoFunction(eventService.getEvent(eventId))
         ).getResponseEntity();
     }
 

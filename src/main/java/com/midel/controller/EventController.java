@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.midel.service.EventService.getEventDtoFunction;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class EventController {
 
         return new RestResponse(
                 HttpStatus.OK,
-                getEventDtoFunction(eventService.getAuthUserEventById(eventId))
+                eventService.getEventDtoFunction(eventService.getAuthUserEventById(eventId))
         ).getResponseEntity();
 
     }
@@ -99,7 +98,7 @@ public class EventController {
 
     }
 
-    @Operation(summary = "")
+    @Operation(summary = "Get all available chats for the authorized user.")
     @GetMapping("shared")
     public ResponseEntity<?> getSharedEvents() {
 
