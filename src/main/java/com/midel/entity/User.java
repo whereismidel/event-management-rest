@@ -36,21 +36,23 @@ public class User implements UserDetails {
     private Role role;
 
     @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_friends",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
-    private Set<User> friends = new HashSet<>();
+    private Set<User> friends;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "owner", orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<Chat> chatsOwns = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "owner", orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Chat> chatsOwns;
 
-    @JsonBackReference
-    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
-    private Set<Chat> memberOfChats = new LinkedHashSet<>();
+    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+    private Set<Chat> memberOfChats;
+
+    @OneToMany(mappedBy = "owner", orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Event> createdEvents;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,8 +1,8 @@
 package com.midel.controller;
 
 import com.midel.dto.JwtAuthenticationResponseDto;
-import com.midel.dto.UserSignInDto;
-import com.midel.dto.UserSignUpDto;
+import com.midel.dto.user.UserSignInRequestDto;
+import com.midel.dto.user.UserSignUpRequestDto;
 import com.midel.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,13 +24,13 @@ public class AuthController {
 
     @Operation(summary = "User registration")
     @PostMapping("/signup")
-    public ResponseEntity<JwtAuthenticationResponseDto> signUp(@RequestBody @Valid UserSignUpDto request) {
+    public ResponseEntity<JwtAuthenticationResponseDto> signUp(@RequestBody @Valid UserSignUpRequestDto request) {
         return ResponseEntity.ok(authenticationService.signUp(request));
     }
 
     @Operation(summary = "User authentication")
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponseDto> signIn(@RequestBody @Valid UserSignInDto request) {
+    public ResponseEntity<JwtAuthenticationResponseDto> signIn(@RequestBody @Valid UserSignInRequestDto request) {
         return ResponseEntity.ok(authenticationService.signIn(request));
     }
 

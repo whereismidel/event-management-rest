@@ -1,6 +1,9 @@
 package com.midel.controller;
 
-import com.midel.dto.ChatCreateDto;
+import com.midel.dto.Mapper;
+import com.midel.dto.chat.ChatCreateRequestDto;
+import com.midel.dto.user.UserRequestDto;
+import com.midel.dto.user.UserResponseDto;
 import com.midel.response.ErrorResponse;
 import com.midel.response.RestResponse;
 import com.midel.service.ChatService;
@@ -11,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -26,63 +28,46 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @Operation(summary = "Get chats of all users")
-    @GetMapping
-    @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<?> getAllChats() {
-        return new RestResponse(
-                HttpStatus.OK,
-                chatService.getAll()
-        ).getResponseEntity();
-    }
-
     @Operation(summary = "Create a chat as an authorized user")
     @PostMapping
-    public ResponseEntity<?> createChat(@RequestBody @Valid ChatCreateDto chatCreateDto) {
+    public ResponseEntity<?> createChat(@RequestBody @Valid ChatCreateRequestDto chatCreateRequestDto) {
+
         return new RestResponse(
-                HttpStatus.OK,
-                chatService.create(chatCreateDto.getTitle())
+                HttpStatus.CREATED,
+                chatService.create(chatCreateRequestDto.getTitle())
         ).getResponseEntity();
+
     }
 
     @Operation(summary = "Get all chats of an authorized user")
-    @GetMapping("my")
+    @GetMapping
     public ResponseEntity<?> getMyChats() {
+
         return new RestResponse(
                 HttpStatus.OK,
-                chatService.getMyChats()
+                chatService.getMy()
         ).getResponseEntity();
+
     }
 
     @Operation(summary = "Get chat by id of an authorized user")
     @GetMapping("{chatId}")
     public ResponseEntity<?> getChat(@PathVariable UUID chatId) {
-        try {
-            return new RestResponse(
-                    HttpStatus.OK,
-                    chatService.getAuthUserChatById(chatId)
-            ).getResponseEntity();
-        } catch (Exception e) {
-            return new ErrorResponse(
-                    HttpStatus.BAD_REQUEST,
-                    e.getMessage()
-            ).getResponseEntity();
-        }
+
+        return new RestResponse(
+                HttpStatus.OK,
+                Mapper.INSTANCE.chatToChatResponse(chatService.getAuthUserChatById(chatId))
+        ).getResponseEntity();
+
     }
 
-
     @Operation(summary = "Add a participant to the chat of an authorized user")
-    @PostMapping("{chatId}")
-    public ResponseEntity<?> addChatMember(@PathVariable UUID chatId, @RequestBody Long userId) {
-        try {
-            chatService.addChatMember(chatId, userId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ErrorResponse(
-                    HttpStatus.BAD_REQUEST,
-                    e.getMessage()
-            ).getResponseEntity();
-        }
+    @PostMapping("{chatId}/invite")
+    public ResponseEntity<?> addChatMember(@PathVariable UUID chatId, @RequestBody UserRequestDto userRequestDto) {
+
+        chatService.addChatMember(chatId, userRequestDto.getUserId());
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 }

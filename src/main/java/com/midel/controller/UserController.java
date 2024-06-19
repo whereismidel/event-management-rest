@@ -1,7 +1,7 @@
 package com.midel.controller;
 
 
-import com.midel.response.ErrorResponse;
+import com.midel.dto.user.UserRequestDto;
 import com.midel.response.RestResponse;
 import com.midel.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,15 +21,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "Get all users")
-    @GetMapping
-    public ResponseEntity<?> getAllUsers() {
-        return new RestResponse(
-                HttpStatus.OK,
-                userService.getAllUser()
-            ).getResponseEntity();
-    }
-
     @Operation(summary = "Get friends list for an authorized user")
     @GetMapping("/friends")
     public ResponseEntity<?> getFriends() {
@@ -41,16 +32,19 @@ public class UserController {
 
     @Operation(summary = "Add another user as a friend of an authorized user")
     @PostMapping("/friends")
-    public ResponseEntity<?> addFriend(@RequestBody Long friendId) {
-        try {
-            userService.addFriend(friendId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ErrorResponse(
-                    HttpStatus.BAD_REQUEST,
-                    e.getMessage()
-            ).getResponseEntity();
-        }
+    public ResponseEntity<Void> addFriend(@RequestBody UserRequestDto userRequestDto) {
+
+        userService.addFriend(userRequestDto.getUserId());
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @Operation(hidden = true)
+    @GetMapping("genfriend")
+    public ResponseEntity<?> generateFriends() {
+        userService.generateFriends();
+
+        return ResponseEntity.ok("");
     }
 
 }

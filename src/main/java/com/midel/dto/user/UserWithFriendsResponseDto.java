@@ -1,4 +1,4 @@
-package com.midel.dto;
+package com.midel.dto.user;
 
 import com.midel.entity.enums.Role;
 import lombok.Data;
@@ -6,11 +6,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class UserWithFriendsDto {
+public class UserWithFriendsResponseDto {
 
     private Long id;
     private String username;
     private Role role;
-    private List<UserDto> friends;
+    private List<UserResponseDto> friends;
 
 }

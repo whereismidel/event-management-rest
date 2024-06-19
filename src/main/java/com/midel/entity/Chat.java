@@ -27,16 +27,20 @@ public class Chat {
     private String title;
 
     @JsonManagedReference
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
 
     @JsonManagedReference
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "chats_members",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "members_id"))
-    private Set<User> members = new LinkedHashSet<>();
+    private Set<User> members;
+
+    @OneToMany(mappedBy = "allowedChat", fetch = FetchType.LAZY)
+    private Set<Event> eventInvitations;
+
 
     @Override
     public boolean equals(Object o) {

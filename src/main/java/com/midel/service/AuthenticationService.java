@@ -1,8 +1,8 @@
 package com.midel.service;
 
 import com.midel.dto.JwtAuthenticationResponseDto;
-import com.midel.dto.UserSignInDto;
-import com.midel.dto.UserSignUpDto;
+import com.midel.dto.user.UserSignInRequestDto;
+import com.midel.dto.user.UserSignUpRequestDto;
 import com.midel.entity.User;
 import com.midel.entity.enums.Role;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationResponseDto signUp(UserSignUpDto request) {
+    public JwtAuthenticationResponseDto signUp(UserSignUpRequestDto request) {
 
         User user = User.builder()
                 .username(request.getUsername())
@@ -36,7 +36,7 @@ public class AuthenticationService {
         return new JwtAuthenticationResponseDto(jwt);
     }
 
-    public JwtAuthenticationResponseDto signIn(UserSignInDto request) {
+    public JwtAuthenticationResponseDto signIn(UserSignInRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     request.getUsername(),
